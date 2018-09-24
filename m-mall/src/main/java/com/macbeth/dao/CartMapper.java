@@ -1,6 +1,8 @@
 package com.macbeth.dao;
 
 import com.macbeth.pojo.Cart;
+import com.macbeth.pojo.CartExample;
+import org.apache.ibatis.annotations.Param;
 
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
@@ -9,7 +11,9 @@ public interface CartMapper {
 
     int insertSelective(Cart record);
 
-    Cart selectByPrimaryKey(Integer id);
+    int updateByExampleSelective(@Param("record") Cart record, @Param("example") CartExample example);
+
+    int updateByExample(@Param("record") Cart record, @Param("example") CartExample example);
 
     int updateByPrimaryKeySelective(Cart record);
 

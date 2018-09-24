@@ -1,6 +1,8 @@
 package com.macbeth.dao;
 
 import com.macbeth.pojo.Category;
+import com.macbeth.pojo.CategoryExample;
+import org.apache.ibatis.annotations.Param;
 
 public interface CategoryMapper {
     int deleteByPrimaryKey(Integer id);
@@ -9,7 +11,9 @@ public interface CategoryMapper {
 
     int insertSelective(Category record);
 
-    Category selectByPrimaryKey(Integer id);
+    int updateByExampleSelective(@Param("record") Category record, @Param("example") CategoryExample example);
+
+    int updateByExample(@Param("record") Category record, @Param("example") CategoryExample example);
 
     int updateByPrimaryKeySelective(Category record);
 

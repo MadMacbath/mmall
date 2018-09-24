@@ -1,6 +1,8 @@
 package com.macbeth.dao;
 
 import com.macbeth.pojo.Order;
+import com.macbeth.pojo.OrderExample;
+import org.apache.ibatis.annotations.Param;
 
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer id);
@@ -9,7 +11,9 @@ public interface OrderMapper {
 
     int insertSelective(Order record);
 
-    Order selectByPrimaryKey(Integer id);
+    int updateByExampleSelective(@Param("record") Order record, @Param("example") OrderExample example);
+
+    int updateByExample(@Param("record") Order record, @Param("example") OrderExample example);
 
     int updateByPrimaryKeySelective(Order record);
 
