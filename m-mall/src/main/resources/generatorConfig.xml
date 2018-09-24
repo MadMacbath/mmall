@@ -24,7 +24,7 @@
             <property name="immutable" value="false" />
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="mappers" targetProject="./src/main/resource">
+        <sqlMapGenerator targetPackage="mappers" targetProject="./src/main/resources">
             <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
 
