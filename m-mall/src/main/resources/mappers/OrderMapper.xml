@@ -1,36 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.macbeth.dao.OrderMapper" >
-<<<<<<< HEAD
-  <resultMap id="BaseResultMap" type="com.macbeth.pojo.Order" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="order_no" jdbcType="BIGINT" javaType="java.lang.Long" />
-      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="shipping_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="paymennt" jdbcType="DECIMAL" javaType="java.math.BigDecimal" />
-      <arg column="payment_type" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="postage" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="payment_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="send_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="end_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="close_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-    </constructor>
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, order_no, user_id, shipping_id, paymennt, payment_type, postage, status, payment_time, 
-    send_time, end_time, close_time, create_time, update_time
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from mmall_order
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-=======
   <sql id="Update_By_Example_Where_Clause" >
     <where >
       <foreach collection="example.oredCriteria" item="criteria" separator="or" >
@@ -60,7 +30,6 @@
       </foreach>
     </where>
   </sql>
->>>>>>> master
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_order
     where id = #{id,jdbcType=INTEGER}
@@ -168,8 +137,6 @@
       </if>
     </trim>
   </insert>
-<<<<<<< HEAD
-=======
   <update id="updateByExampleSelective" parameterType="map" >
     update mmall_order
     <set >
@@ -240,7 +207,6 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
->>>>>>> master
   <update id="updateByPrimaryKeySelective" parameterType="com.macbeth.pojo.Order" >
     update mmall_order
     <set >

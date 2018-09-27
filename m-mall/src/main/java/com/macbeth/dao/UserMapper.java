@@ -18,4 +18,22 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    int checkUserName(String username);
+
+    User getUserByUsername(String username);
+
+    int checkEmail(String email);
+
+    String selectQuestion(String username);
+
+    int queryQuestionAnswer(@Param("username") String username, @Param("question") String question, @Param("answer") String answer);
+
+    int updatePasswordByUsername(@Param("username") String username, @Param("password") String passwordMD5);
+
+    int checkPassword(@Param("password") String password, @Param("id") Integer id);
+
+    int checkEmailByUserId(@Param("email") String email, @Param("id") Integer id);
+
+    User getInformationByUserId(Integer id);
 }
