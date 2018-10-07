@@ -1,4 +1,4 @@
-package com.macbeth.vo;
+package com.macbeth.to;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

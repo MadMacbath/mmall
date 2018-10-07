@@ -30,10 +30,16 @@
       </foreach>
     </where>
   </sql>
+
+  <sql id="orderProperties">
+    id,order_no,user_id,shipping_id,payment,payment_type,postage,status,payment_time,send_time,end_time,close_time,create_time,update_time
+  </sql>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_order
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <insert id="insert" parameterType="com.macbeth.pojo.Order" >
     insert into mmall_order (id, order_no, user_id, 
       shipping_id, paymennt, payment_type, 
@@ -269,4 +275,17 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByOrderNoAndUserId" parameterType="map" resultType="Order">
+    select
+    <include refid="orderProperties" />
+    from mmall_order where
+    user_id = #{userId} and order_no = #{orderNo}
+  </select>
+
+  <select id="selectByOrderNo" resultType="Order" parameterType="string">
+    select
+    <include refid="orderProperties" />
+    from mmall_order where order_no = #{orderNo}
+  </select>
 </mapper>

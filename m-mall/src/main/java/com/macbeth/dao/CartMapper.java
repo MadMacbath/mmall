@@ -4,6 +4,8 @@ import com.macbeth.pojo.Cart;
 import com.macbeth.pojo.CartExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -18,4 +20,16 @@ public interface CartMapper {
     int updateByPrimaryKeySelective(Cart record);
 
     int updateByPrimaryKey(Cart record);
+
+    List<Cart> selectByUserId(Integer userId);
+
+    Cart selectByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
+
+    int getAllCheckedStatus(Integer userId);
+
+    int deleteByUserIdAndProductId(@Param("userId") Integer userId, @Param("productIdList") List<String> productIdList);
+
+    int checkedOrUncheckedProduct(@Param("userId") Integer userId, @Param("checked") Integer checked,@Param("productId") Integer productId);
+
+    int getCartProductCount(Integer userId);
 }

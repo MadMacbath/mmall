@@ -30,6 +30,11 @@
       </foreach>
     </where>
   </sql>
+
+  <sql id="cartProperties">
+    id,user_id,product_id,quantity,checked,create_time,update_time
+  </sql>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_cart
     where id = #{id,jdbcType=INTEGER}
@@ -39,8 +44,8 @@
       quantity, checked, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
-      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, now(),
+      now())
   </insert>
   <insert id="insertSelective" parameterType="com.macbeth.pojo.Cart" >
     insert into mmall_cart
@@ -84,10 +89,10 @@
         #{checked,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
     </trim>
   </insert>
@@ -152,7 +157,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = now(),
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -165,6 +170,44 @@
       checked = #{checked,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where id = now()
   </update>
+
+  <select id="selectByUserId" parameterType="int" resultType="Cart">
+    select
+    <include refid="cartProperties" />
+    from mmall_cart where user_id = #{userId}
+  </select>
+
+  <select id="selectByUserIdAndProductId" parameterType="map" resultType="Cart">
+    select
+    <include refid="cartProperties" />
+    from mmall_cart where user_id = #{userId} and product_id = #{productId}
+  </select>
+
+  <select id="getAllCheckedStatus" parameterType="int" resultType="int">
+    select count(1) from mmall_cart where checked = 0
+  </select>
+
+  <delete id="deleteByUserIdAndProductId" parameterType="map">
+    delete from mmall_cart where
+    user_id = #{userId}
+    and product_id in
+    <foreach collection="productIdList" separator="," item="item" index="index" open="(" close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <update id="checkedOrUncheckedProduct" parameterType="map">
+    update mmall_cart set checked = #{checked} , update_time = now()
+    where user_id = #{userId}
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+  </update>
+
+  <select id="getCartProductCount" parameterType="int" resultType="int">
+    select ifnull(sum(quantity),0) from mmall_cart
+    where user_id = #{userId}
+  </select>
 </mapper>

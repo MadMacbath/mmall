@@ -1,4 +1,4 @@
-package com.macbeth.vo;
+package com.macbeth.to;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,39 +6,32 @@ import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Email;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
 @ToString
 @ApiModel
-public class UserRegister {
+public class UserUpdate {
     @ApiModelProperty(hidden = true)
     private Integer id;
 
-    @ApiModelProperty(value = "用户名",name = "username")
-    @NotNull
+    @ApiModelProperty(hidden = true)
     private String username;
 
-    @ApiModelProperty(value = "用户密码",name = "password")
-    @NotNull
+    @ApiModelProperty(hidden = true)
     private String password;
 
     @ApiModelProperty(value = "用户邮箱地址",name = "email")
-    @NotNull
-    @Email(message = "邮箱地址不合法")
+    @Email
     private String email;
 
     @ApiModelProperty(value = "用户手机号",name = "phone")
-    @NotNull
     private String phone;
 
     @ApiModelProperty(value = "用户密保问题",name = "question")
-    @NotNull
     private String question;
 
     @ApiModelProperty(value = "用户密保答案",name = "answer")
-    @NotNull
     private String answer;
 
     @ApiModelProperty(hidden = true)

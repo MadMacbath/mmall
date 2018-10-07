@@ -30,6 +30,11 @@
       </foreach>
     </where>
   </sql>
+
+  <sql id="orderItemProperties">
+    id,user_id,order_no,product_id,product_name,product_image,current_unit_price,quantity,total_price,create_time,update_time
+  </sql>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_order_item
     where id = #{id,jdbcType=INTEGER}
@@ -225,4 +230,11 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getByOrderNoAndUserId" parameterType="map" resultType="OrderItem">
+    select
+    <include refid="orderItemProperties" />
+    from mmall_order_item where user_id = #{userId}
+    and order_no = #{orderNo}
+  </select>
 </mapper>

@@ -30,6 +30,10 @@
       </foreach>
     </where>
   </sql>
+
+  <sql id="productProperties">
+    id,category_id,name,subtitle,main_image,sub_images,detail,price,stock,status,create_time,update_time
+  </sql>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from mmall_product
     where id = #{id,jdbcType=INTEGER}
@@ -43,7 +47,7 @@
     values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{subtitle,jdbcType=VARCHAR}, #{mainImage,jdbcType=VARCHAR}, #{subImages,jdbcType=VARCHAR}, 
       #{detail,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{stock,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{status,jdbcType=INTEGER}, now(), now()
       )
   </insert>
   <insert id="insertSelective" parameterType="com.macbeth.pojo.Product" >
@@ -118,10 +122,10 @@
         #{status,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
     </trim>
   </insert>
@@ -221,7 +225,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = now(),
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -238,7 +242,53 @@
       stock = #{stock,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <update id="updateStatusById" parameterType="map">
+    update mmall_product set status = #{status} where id = #{productId}
+  </update>
+
+  <select id="getById" parameterType="int" resultType="product">
+    select
+    <include refid="productProperties" />
+    from mmall_product where id = #{productId}
+  </select>
+
+  <select id="listProducts" resultType="product">
+    select
+    <include refid="productProperties" />
+    from mmall_product order by id asc
+  </select>
+
+  <select id="searchProducts" resultType="product" parameterType="map">
+    select
+    <include refid="productProperties" />
+    from mmall_product
+    <where>
+      <if test="name != null">
+        name like #{name}
+      </if>
+      <if test="productId != null">
+        and id = #{productId}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByNameAndCategoryIds" parameterType="map" resultType="product">
+    select
+    <include refid="productProperties" />
+    from mmall_product
+    where status = 1
+    <if test="name != null">
+      and name like #{name}
+    </if>
+    <if test="categoryIds.size > 0">
+      and categoryId in
+      <foreach collection="categoryIds" index="index" item="item" open="(" separator="," close=")">
+        ${item}
+      </foreach>
+    </if>
+  </select>
 </mapper>

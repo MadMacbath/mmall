@@ -27,7 +27,7 @@ public class ObjectUtils {
         return baseTypes.contains(typeName);
     }
 
-    public static <T,R> void transferEntity(T target,R resource){
+    public static <T,R> T transferEntity(T target,R resource){
         Class<T> targetClass = (Class<T>) target.getClass();
         Arrays.stream(resource.getClass().getDeclaredFields()).filter(filed -> {
             try {
@@ -48,6 +48,7 @@ public class ObjectUtils {
                 System.out.println("非法参数：");
             }
         });
+        return target;
     }
 
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {

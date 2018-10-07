@@ -4,6 +4,8 @@ import com.macbeth.pojo.Category;
 import com.macbeth.pojo.CategoryExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface CategoryMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -18,4 +20,8 @@ public interface CategoryMapper {
     int updateByPrimaryKeySelective(Category record);
 
     int updateByPrimaryKey(Category record);
+
+    Category selectCategoryById(Integer categoryId);
+
+    List<Category> selectCategoryByParentId(Integer categoryId);
 }
