@@ -4,32 +4,30 @@ import com.macbeth.common.Constant;
 import com.macbeth.common.ServerResponse;
 import com.macbeth.pojo.User;
 import com.macbeth.service.UserService;
-import com.macbeth.to.manager.UserLogin;
+import com.macbeth.to.manager.UserLoginManager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-@Api(tags = "管理员用户接口")
+@Api(tags = "管理员用户接口ce")
 @RestController
-@RequestMapping("/manager")
+@RequestMapping(value = "user-manager")
 public class UserManagerController {
     @Autowired
     private UserService userService;
 
     @ApiOperation(value = "管理员用户登陆")
-    @PostMapping("user")
-    public ServerResponse<User> login(@Valid UserLogin userLogin,
+    @RequestMapping(value = "user",method = RequestMethod.POST)
+    public ServerResponse<User> login(@Valid @RequestBody UserLoginManager userLoginManager,
                                       @ApiIgnore HttpSession session){
 
-        ServerResponse<User> response = userService.login(userLogin.getUsername(),userLogin.getPassword());
+        ServerResponse<User> response = userService.login(userLoginManager.getUsername(),userLoginManager.getPassword());
         if (response.isSuccess()){
             User user = response.getData();
             if (user.getRole() == Constant.Role.ROLE_ADMIN){

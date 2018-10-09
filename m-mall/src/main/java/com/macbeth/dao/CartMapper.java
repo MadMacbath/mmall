@@ -32,4 +32,8 @@ public interface CartMapper {
     int checkedOrUncheckedProduct(@Param("userId") Integer userId, @Param("checked") Integer checked,@Param("productId") Integer productId);
 
     int getCartProductCount(Integer userId);
+
+    List<Cart> querySelectedByUserId(Integer userId);
+
+    int deleteByPrimaryKeys(List<Integer> ids);
 }

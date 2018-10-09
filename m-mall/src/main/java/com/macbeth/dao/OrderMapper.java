@@ -2,7 +2,10 @@ package com.macbeth.dao;
 
 import com.macbeth.pojo.Order;
 import com.macbeth.pojo.OrderExample;
+import com.macbeth.to.manager.order.OrderSearch;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OrderMapper {
     int deleteByPrimaryKey(Integer id);
@@ -22,4 +25,10 @@ public interface OrderMapper {
     Order selectByOrderNoAndUserId(@Param("userId") Integer userId, @Param("orderNo") Long orderNo);
 
     Order selectByOrderNo(String orderNo);
+
+    List<Order> selectByUserId(Integer userId);
+
+    List<Order> lists();
+
+    List<Order> managerSearch(OrderSearch orderSearch);
 }

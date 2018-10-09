@@ -30,7 +30,7 @@ import java.util.Map;
 
 @Api(tags = "商品管理接口")
 @RestController
-@RequestMapping(value = "manager")
+@RequestMapping(value = "product-manager")
 public class ProductManagerController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class ProductManagerController {
     private FileService fileService;
 
     @ApiOperation(value = "添加商品")
-    @PostMapping(value = "product")
+    @RequestMapping(value = "product",method = RequestMethod.POST)
     public ServerResponse<String> addProduct(@Validated @RequestBody ProductAdd productAdd,
                                              @ApiIgnore HttpSession session){
 
@@ -54,7 +54,7 @@ public class ProductManagerController {
     }
 
     @ApiOperation(value = "更新产品状态")
-    @PutMapping(value = "product/{productId}/status")
+    @RequestMapping(value = "product/{productId}/status",method = RequestMethod.PUT)
     public ServerResponse<String> setStatus(@PathVariable("productId") @ApiParam(value = "产品ID",name = "productId") @Valid Integer productId,
                                             @Valid ProductUpdateStatus productUpdateStatus,
                                             @ApiIgnore HttpSession session){
@@ -67,7 +67,7 @@ public class ProductManagerController {
     }
 
     @ApiOperation(value = "获取产品详情")
-    @GetMapping(value = "product/{productId}")
+    @RequestMapping(value = "product/{productId}",method = RequestMethod.GET)
     public ServerResponse<ProductDetailVo> getProductInformation(@PathVariable("productId") @ApiParam(value = "产品id",name = "productId") Integer productId,
                                                                  @ApiIgnore HttpSession session){
 
@@ -79,7 +79,7 @@ public class ProductManagerController {
     }
 
     @ApiOperation(value = "获取产品列表")
-    @GetMapping(value = "products")
+    @RequestMapping(value = "products",method = RequestMethod.GET)
     public ServerResponse<PageInfo> listProducts(@ApiParam(value = "当前页数",name = "pageNum") @RequestParam(defaultValue = "1") int pageNum,
                                                  @ApiParam(value = "页面容量",name = "pageSize") @RequestParam(defaultValue = "10") int pageSize,
                                                  @ApiIgnore HttpSession session){
@@ -92,7 +92,7 @@ public class ProductManagerController {
     }
 
     @ApiOperation(value = "产品搜索")
-    @GetMapping(value = "product")
+    @RequestMapping(value = "product",method = RequestMethod.GET)
     public ServerResponse<PageInfo> searchProducts(ProductSearch productSearch,
                                                    @ApiIgnore HttpSession session){
 
@@ -103,7 +103,7 @@ public class ProductManagerController {
     }
 
     @ApiOperation(value = "文件上传")
-    @PostMapping(value = "file",headers = "content-type=multipart/form-data")
+    @RequestMapping(value = "file",headers = "content-type=multipart/form-data",method = RequestMethod.POST)
     public ServerResponse uploadFile(@ApiParam(value = "上传的文件",name = "file",required = true) MultipartFile file,
                                      @ApiIgnore HttpServletRequest request){
         HttpSession session = request.getSession();

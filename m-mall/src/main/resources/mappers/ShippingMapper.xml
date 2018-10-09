@@ -305,4 +305,10 @@
     from mmall_shipping where
      user_id = #{userId}
   </select>
+
+  <select id="getById" parameterType="int" resultType="Shipping">
+    select
+    <include refid="shippingProperties" />
+    from mmall_shipping where id = #{shippingId}
+  </select>
 </mapper>

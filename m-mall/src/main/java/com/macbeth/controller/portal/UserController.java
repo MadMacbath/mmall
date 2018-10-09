@@ -6,9 +6,9 @@ import com.macbeth.pojo.User;
 import com.macbeth.service.UserService;
 import com.macbeth.util.ObjectUtils;
 import com.macbeth.to.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -20,15 +20,22 @@ import javax.validation.Valid;
 @Api(tags = "用户接口")
 public class UserController {
 
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserService userService;
 
     @ApiOperation(value = "用户登陆")
-    @PostMapping(value = "user/{username}/session",produces = "application/json;charset=utf-8")
-    public ServerResponse<User> login(@Valid @PathVariable("username") @ApiParam(name = "username",value = "用户名") String username,
-                                      @Valid  UserLogin user,
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(value = "用户名",name = "username",paramType = "path")
+    })
+    @PostMapping(value = "user/{username}/session")
+    public ServerResponse<User> login(@PathVariable("username") String username,
+                                      @Valid @RequestBody UserLogin user,
                                       @ApiIgnore HttpSession session){
 
+        logger.info("用户登陆啦");
+        logger.error("用户登陆啦");
         ServerResponse response = userService.login(username, user.getPassword());
         if (response.isSuccess()) session.setAttribute(Constant.CURRENT_USER,response.getData());
         return response;
@@ -43,7 +50,7 @@ public class UserController {
 
     @ApiOperation(value = "用户注册")
     @PostMapping("user")
-    public ServerResponse<String> register(@Valid UserRegister userRegister){
+    public ServerResponse<String> register(@Valid @RequestBody UserRegister userRegister){
 
         User user = new User();
         ObjectUtils.transferEntity(user,userRegister);
@@ -106,7 +113,7 @@ public class UserController {
     @ApiOperation(value = "更新用户信息")
     @PutMapping("user")
     public ServerResponse<User> updateInformation(@ApiIgnore HttpSession session,
-                                                  @Valid  UserUpdate userUpdate){
+                                                  @Valid @RequestBody  UserUpdate userUpdate){
 
         Object object = session.getAttribute(Constant.CURRENT_USER);
         if (object == null) return ServerResponse.createByErrorMessage("用户未登陆");

@@ -42,7 +42,7 @@
         </property>
     </bean>
 
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" name="mapperScannerConfigurer">
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.macbeth.dao" />
     </bean>
 

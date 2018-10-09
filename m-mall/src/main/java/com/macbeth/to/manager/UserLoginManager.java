@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @ApiModel
-public class UserLogin {
+public class UserLoginManager {
     @ApiModelProperty(value = "用户名",name = "username")
     @NotNull
     private String username;

@@ -3,6 +3,7 @@ package com.macbeth.common;
 import com.google.common.collect.Sets;
 import lombok.Data;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class Constant {
@@ -71,6 +72,10 @@ public class Constant {
         public int getCode() {
             return code;
         }
+
+        public static OrderStatus getByCode(int code){
+            return Arrays.stream(OrderStatus.values()).filter(item -> item.getCode() == code).findAny().get();
+        }
     }
 
     public interface AlipayCallBack{
@@ -96,6 +101,28 @@ public class Constant {
 
         public int getCode() {
             return code;
+        }
+    }
+
+    public enum PaymentTypeEnum{
+        ONLINE_PAY(1,"在线支付");
+        private String value;
+        private int code;
+        PaymentTypeEnum(int code,String value){
+            this.value = value;
+            this.code = code;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public static PaymentTypeEnum getByCode(int code){
+            return Arrays.stream(PaymentTypeEnum.values()).filter(item -> item.getCode() == code).findAny().get();
         }
     }
 }

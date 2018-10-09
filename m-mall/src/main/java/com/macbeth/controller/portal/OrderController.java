@@ -4,6 +4,7 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.demo.trade.config.Configs;
 import com.google.common.collect.Maps;
+import com.google.common.collect.RangeSet;
 import com.macbeth.common.Constant;
 import com.macbeth.common.ServerResponse;
 import com.macbeth.pojo.Order;
@@ -13,16 +14,18 @@ import com.macbeth.util.ControllerUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import net.sf.jsqlparser.schema.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,6 +38,66 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+
+    @ApiOperation(value = "创建订单")
+    @PostMapping(value = "order")
+    public ServerResponse create(@ApiIgnore HttpSession session,
+                                 @ApiParam(value = "收货地址ID",name = "shippingId") @NotNull Integer shippingId){
+
+        ServerResponse response = ControllerUtils.isLogin(session);
+        if (response.isError())
+            return response;
+        User user = (User) response.getData();
+        return orderService.createOrder(user.getId(),shippingId);
+    }
+
+    @ApiOperation(value = "取消订单")
+    @DeleteMapping(value = "order/{orderNo}")
+    public ServerResponse cancell(@ApiIgnore HttpSession session,
+                                  @PathVariable(value = "orderNo") @ApiParam(value = "订单号",name = "orderNo") Long orderNo){
+
+        ServerResponse response = ControllerUtils.isLogin(session);
+        if (response.isError())
+            return response;
+        User user = (User) response.getData();
+        return orderService.cancell(user.getId(),orderNo);
+    }
+
+    @ApiOperation(value = "获取购物车中已经选中的商品详情")
+    @GetMapping(value = "order/products/checked")
+    public ServerResponse getInfomation(@ApiIgnore HttpSession session){
+        ServerResponse response = ControllerUtils.isLogin(session);
+        if (response.isError())
+            return response;
+        User user = (User) response.getData();
+        return orderService.getSelectedProduct(user.getId());
+    }
+
+    @ApiOperation(value = "获取订单详情")
+    @GetMapping(value = "order/{orderNo}")
+    public ServerResponse details(@ApiIgnore HttpSession session,
+                                  @PathVariable(value = "orderNo") @ApiParam(value = "订单好",name = "orderNo") Long orderNo){
+
+        ServerResponse response = ControllerUtils.isLogin(session);
+        if (response.isError())
+            return response;
+        User user = (User) response.getData();
+        return orderService.getByUserIdAndOrderNo(user.getId(),orderNo);
+    }
+
+    @ApiOperation(value = "获取订单列表")
+    @GetMapping(value = "orders")
+    public ServerResponse list(@ApiIgnore HttpSession session,
+                               @ApiParam(value = "当前页",name = "pageNum") @RequestParam(defaultValue = "1") int pageNum,
+                               @ApiParam(value = "页容量",name = "pageSize") @RequestParam(defaultValue = "10") int pageSize){
+
+        ServerResponse response = ControllerUtils.isLogin(session);
+        if (response.isError())
+            return response;
+        User user = (User) response.getData();
+        return orderService.list(user.getId(),pageNum,pageSize);
+    }
 
     @ApiOperation(value = "获取支付二维码")
     @GetMapping(value = "order/pay/{orderNo}")

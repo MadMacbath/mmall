@@ -288,4 +288,29 @@
     <include refid="orderProperties" />
     from mmall_order where order_no = #{orderNo}
   </select>
+
+
+  <select id="selectByUserId" parameterType="int" resultType="Order">
+    select
+    <include refid="orderProperties" />
+    from mmall_order where user_id = #{userId}
+    order by create_time desc
+  </select>
+
+  <select id="lists" resultType="Order">
+    select
+    <include refid="orderProperties" />
+    from mmall_order order by create_time desc
+  </select>
+
+  <select id="managerSearch" parameterType="com.macbeth.to.manager.order.OrderSearch" resultType="OrderItem">
+    select
+    <include refid="orderProperties" />
+    from mmall_order
+    <trim prefix="where" prefixOverrides="AND | OR">
+      <if test="orderNo != null">
+        order_no = #{orderNo}
+      </if>
+    </trim>
+  </select>
 </mapper>

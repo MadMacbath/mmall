@@ -47,7 +47,7 @@
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderNo,jdbcType=BIGINT}, 
       #{productId,jdbcType=INTEGER}, #{productName,jdbcType=VARCHAR}, #{productImage,jdbcType=VARCHAR}, 
       #{currentUnitPrice,jdbcType=DECIMAL}, #{quantity,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      now(), now())
   </insert>
   <insert id="insertSelective" parameterType="com.macbeth.pojo.OrderItem" >
     insert into mmall_order_item
@@ -115,10 +115,10 @@
         #{totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+        now(),
       </if>
     </trim>
   </insert>
@@ -211,7 +211,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = now(),
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -227,7 +227,7 @@
       quantity = #{quantity,jdbcType=INTEGER},
       total_price = #{totalPrice,jdbcType=DECIMAL},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -236,5 +236,27 @@
     <include refid="orderItemProperties" />
     from mmall_order_item where user_id = #{userId}
     and order_no = #{orderNo}
+  </select>
+
+  <insert id="insertList" parameterType="OrderItem">
+    insert into mmall_order_item (id, user_id, order_no,
+      product_id, product_name, product_image,
+      current_unit_price, quantity, total_price,
+      create_time, update_time)
+    values
+    <foreach collection="orderItems" item="item" separator=",">
+      (
+        #{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.orderNo,jdbcType=BIGINT},
+        #{item.productId,jdbcType=INTEGER}, #{item.productName,jdbcType=VARCHAR}, #{item.productImage,jdbcType=VARCHAR},
+        #{item.currentUnitPrice,jdbcType=DECIMAL}, #{item.quantity,jdbcType=INTEGER}, #{item.totalPrice,jdbcType=DECIMAL},
+        now(), now()
+      )
+    </foreach>
+  </insert>
+
+  <select id="getByOrderNo" parameterType="int" resultType="OrderItem">
+    select
+    <include refid="orderItemProperties"/>
+    from mmall_order_item where order_no = #{orderNo}
   </select>
 </mapper>

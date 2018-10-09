@@ -22,15 +22,15 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "manager")
 @Api(tags = "分类管理接口")
+@RequestMapping(value = "category-manager")
 public class CategoryManagerController {
 
     @Autowired
     private CategoryService categoryService;
 
     @ApiOperation(value = "增加分类")
-    @PostMapping(value = "category")
+    @RequestMapping(value = "category",method = RequestMethod.GET)
     public ServerResponse<String> addCategory(@Valid CategoryAdd categoryAdd,
                                                 @ApiIgnore HttpSession session){
 
@@ -47,7 +47,7 @@ public class CategoryManagerController {
     }
 
     @ApiOperation(value = "更新类别名称")
-    @PutMapping(value = "category/name")
+    @RequestMapping(value = "category/name",method = RequestMethod.PUT)
     public ServerResponse updateCategoryName(@Valid CategoryUpdateName categoryUpdateName,
                                                      @ApiIgnore HttpSession session){
 
@@ -63,7 +63,7 @@ public class CategoryManagerController {
     }
 
     @ApiOperation(value = "查询平级子节点信息")
-    @GetMapping(value = "category/parallel/{parentId}")
+    @RequestMapping(value = "category/parallel/{parentId}",method = RequestMethod.GET)
     public ServerResponse<List<Category>> getChildrenParallelCategory(@ApiParam(value = "父类别ID",name = "parentId") @PathVariable("parentId") Integer parentId,
                                                                       @ApiIgnore HttpSession session){
 
@@ -73,7 +73,7 @@ public class CategoryManagerController {
     }
 
     @ApiOperation(value = "递归查询所有子类别信息")
-    @GetMapping(value = "category/{parentId}")
+    @RequestMapping(value = "category/{parentId}",method = RequestMethod.GET)
     public ServerResponse<Set<Category>> getChildrenDeepCategory(@ApiParam(value = "父类别ID",name = "parentId") @PathVariable("parentId") Integer parentId,
                                                                       @ApiIgnore HttpSession session){
 
