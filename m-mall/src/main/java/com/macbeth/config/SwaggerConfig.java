@@ -27,12 +27,13 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.macbeth"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .host("macbeth.com.cn");
     }
 
     private ApiInfo apiInfo(){
         Contact contact = new Contact("test","","");
-        return new ApiInfoBuilder().contact(contact).build();
+        return new ApiInfoBuilder().licenseUrl("macbeth.com.cn").contact(contact).build();
 //        return new ApiInfo("","","","",contact,"","");
     }
 }
