@@ -2,6 +2,7 @@ package com.macbeth.controller.backend;
 
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
+import com.macbeth.common.Constant;
 import com.macbeth.common.ServerResponse;
 import com.macbeth.pojo.Product;
 import com.macbeth.service.FileService;
@@ -112,7 +113,7 @@ public class ProductManagerController {
             return response;
         String path = request.getServletContext().getRealPath("upload");
         String targetFileName = fileService.upload(file,path);
-        String url = PropertiesUtils.getProperty("ftp.server.http.prefix") + targetFileName;
+        String url = PropertiesUtils.getProperty(Constant.IMAGE_HOST) + targetFileName;
         Map<String,String> fileMap = Maps.newHashMap();
         fileMap.put("url",url);
         fileMap.put("uri",targetFileName);

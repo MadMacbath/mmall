@@ -1,12 +1,14 @@
 package com.macbeth.util;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class FileUtils {
@@ -52,7 +54,8 @@ public class FileUtils {
                     logger.error("关闭连接失败",e);
                 }
             }
-        }
+        } else
+            result = false;
         return result;
     }
 
@@ -60,7 +63,7 @@ public class FileUtils {
         boolean isSuccess = true;
         try {
             ftpClient.connect(ip);
-//            isSuccess = ftpClient.login(user,pass);
+            isSuccess = ftpClient.login(user,pass);
         } catch (IOException e) {
             isSuccess = false;
             logger.error("连接到：{}，用户名：{}，密码：{}，失败",ip,user,pass);
@@ -68,15 +71,37 @@ public class FileUtils {
         return isSuccess;
     }
 
-    public static void main(String[] args) throws IOException {
-        FTPClient client = new FTPClient();
-        client.connect("192.168.23.3",21);
-//        client.changeWorkingDirectory("img");
-        client.setControlEncoding("utf-8");
-        client.setFileType(FTPClient.BINARY_FILE_TYPE);
-//        client.enterLocalPassiveMode();
-        client.setBufferSize(1024);
-        client.storeFile("/img",new FileInputStream("C:/macbeth/work_subject/mmall/m-mall/src/main/webapp/upload/3a6adb9e-cb6e-4972-a263-a21d870036bf.JPG"));
-        client.disconnect();
+    public static void main(String[] args){
+        try {
+
+            FTPClient client = new FTPClient();
+            client.connect("192.168.16.129", 21);
+            client.login("ftpuser", "chenwei");
+            if (!FTPReply.isPositiveCompletion(client.getReplyCode())){
+                logger.info("用户名密码错误");
+                client.disconnect();
+                return;
+            }
+
+//            boolean result = client.changeWorkingDirectory("img");
+            client.makeDirectory("img");
+            if (client.changeWorkingDirectory("img"))
+                logger.info("转换目录成功");
+            client.setControlEncoding("utf-8");
+            client.setFileType(FTPClient.BINARY_FILE_TYPE);
+            client.enterLocalPassiveMode();
+            client.setBufferSize(1024);
+            File file = new File("C:\\Users\\madma\\Pictures\\FLAMING MOUNTAIN.JPG");
+            try (InputStream inputStream = new FileInputStream(file)){
+                if (client.storeFile(file.getName(), inputStream))
+                    logger.info("上传成功");
+                else
+                    logger.info("上传失败");
+            }
+            client.logout();
+            client.disconnect();
+        } catch (Exception e){
+            logger.info("失败",e);
+        }
     }
 }
