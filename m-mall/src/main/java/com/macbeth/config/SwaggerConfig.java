@@ -22,19 +22,26 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     @Bean
     public Docket customDocket(){
 //        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo());
+        String url = this.getClass().getClassLoader().getResource("swagger-url.properties").getPath().substring(1);
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.macbeth"))
                 .paths(PathSelectors.any())
                 .build()
-                .host("macbeth.com.cn");
+                .host(url);
     }
 
     private ApiInfo apiInfo(){
         Contact contact = new Contact("test","","");
         return new ApiInfoBuilder().licenseUrl("macbeth.com.cn").contact(contact).build();
 //        return new ApiInfo("","","","",contact,"","");
+    }
+
+    public static void main(String[] args) {
+        String url = SwaggerConfig.class.getClassLoader().getResource("swagger-url.properties").getPath();
+        System.out.println(url);
+
     }
 }
 
