@@ -15,7 +15,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-@Api(tags = "管理员用户接口ce")
+@Api(tags = "管理员用户接口")
 @RestController
 @RequestMapping(value = "user-manager")
 public class UserManagerController {
