@@ -1,12 +1,18 @@
 package com.macbeth.util;
 
+import com.google.common.collect.Lists;
+import com.sun.corba.se.impl.orbutil.ObjectStreamClassUtil_1_3;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 
 public class PropertiesUtils {
     private static Logger logger = LoggerFactory.getLogger(PropertiesUtils.class);
@@ -30,6 +36,32 @@ public class PropertiesUtils {
         if (StringUtils.isBlank(value))
             value = defaultValue;
         return value;
+    }
+
+    public static void main(String[] args) throws IOException {
+        try (
+                BufferedReader reader = new BufferedReader(new FileReader("C:\\macbeth\\work_subject\\mmall\\m-mall\\src\\main\\webapp\\WEB-INF\\swagger\\index.html"));
+        ){
+            String str = "";
+            List<String> list = Lists.newArrayList();
+            while ((str = reader.readLine()) != null){
+                str = str.trim();
+                if (str.startsWith("url:"))
+                    str = "url: 'test test',";
+                list.add(str);
+            }
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\macbeth\\work_subject\\mmall\\m-mall\\src\\main\\webapp\\WEB-INF\\swagger\\index.html"))){
+                list.stream().forEach(s -> {
+                    try {
+                        writer.write(s);
+                        writer.newLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        }
+
     }
 
 }

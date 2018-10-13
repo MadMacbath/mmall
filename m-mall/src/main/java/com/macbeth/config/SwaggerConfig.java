@@ -28,8 +28,8 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.macbeth"))
                 .paths(PathSelectors.any())
-                .build()
-                .host(url);
+                .build();
+//                .host(url);
     }
 
     private ApiInfo apiInfo(){

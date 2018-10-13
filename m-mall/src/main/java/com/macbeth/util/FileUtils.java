@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class FileUtils {
@@ -71,37 +74,4 @@ public class FileUtils {
         return isSuccess;
     }
 
-    public static void main(String[] args){
-        try {
-
-            FTPClient client = new FTPClient();
-            client.connect("192.168.16.129", 21);
-            client.login("ftpuser", "chenwei");
-            if (!FTPReply.isPositiveCompletion(client.getReplyCode())){
-                logger.info("用户名密码错误");
-                client.disconnect();
-                return;
-            }
-
-//            boolean result = client.changeWorkingDirectory("img");
-            client.makeDirectory("img");
-            if (client.changeWorkingDirectory("img"))
-                logger.info("转换目录成功");
-            client.setControlEncoding("utf-8");
-            client.setFileType(FTPClient.BINARY_FILE_TYPE);
-            client.enterLocalPassiveMode();
-            client.setBufferSize(1024);
-            File file = new File("C:\\Users\\madma\\Pictures\\FLAMING MOUNTAIN.JPG");
-            try (InputStream inputStream = new FileInputStream(file)){
-                if (client.storeFile(file.getName(), inputStream))
-                    logger.info("上传成功");
-                else
-                    logger.info("上传失败");
-            }
-            client.logout();
-            client.disconnect();
-        } catch (Exception e){
-            logger.info("失败",e);
-        }
-    }
 }
