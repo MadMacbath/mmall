@@ -14,6 +14,10 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 @Configuration
 @EnableSwagger2
 //@ComponentScan(basePackages = {"com.macbeth"})
@@ -22,7 +26,15 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
     @Bean
     public Docket customDocket(){
 //        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo());
-        String url = this.getClass().getClassLoader().getResource("swagger-url.properties").getPath().substring(1);
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("swagger-url.properties");
+        Properties properties = new Properties();
+        String url = "";
+        try {
+            properties.load(inputStream);
+            url = properties.getProperty("url");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
