@@ -1,23 +1,22 @@
 package com.macbeth.common;
 
-import org.springframework.validation.BindException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.lang.annotation.ElementType;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class MyExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ServerResponse resolveException(Exception e){
-        String message = e.getMessage();
-        return ServerResponse.createByErrorMessage(message);
+        log.error("统一捕获异常：{}",e);
+        return ServerResponse.createByErrorMessage("服务器异常");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

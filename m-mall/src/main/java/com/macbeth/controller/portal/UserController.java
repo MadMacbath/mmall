@@ -4,7 +4,7 @@ import com.macbeth.common.Constant;
 import com.macbeth.common.ServerResponse;
 import com.macbeth.pojo.User;
 import com.macbeth.service.UserService;
-import com.macbeth.util.ObjectUtils;
+import com.macbeth.util.*;
 import com.macbeth.to.*;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -32,19 +34,25 @@ public class UserController {
     @PostMapping(value = "user/{username}/session")
     public ServerResponse<User> login(@PathVariable("username") String username,
                                       @Valid @RequestBody UserLogin user,
-                                      @ApiIgnore HttpSession session){
+                                      @ApiIgnore HttpSession session,
+                                      @ApiIgnore HttpServletResponse response){
 
-        logger.info("用户登陆啦");
-        logger.error("用户登陆啦");
-        ServerResponse response = userService.login(username, user.getPassword());
-        if (response.isSuccess()) session.setAttribute(Constant.CURRENT_USER,response.getData());
-        return response;
+        ServerResponse result = userService.login(username, user.getPassword());
+        if (result.isSuccess()) {
+            CookieUtils.writeLoginToken(response,session.getId());
+            String userSerializedString = JsonUtils.obj2String(result.getData());
+            RedisUtils.setex(session.getId(),userSerializedString,60 * 30);
+        }
+        return result;
     }
     @ApiOperation(value = "用户注销")
     @DeleteMapping("user/session")
-    public ServerResponse<String> logOut(@ApiIgnore HttpSession session){
+    public ServerResponse<String> logOut(@ApiIgnore HttpServletRequest request,
+                                         @ApiIgnore HttpServletResponse response){
 
-        session.removeAttribute(Constant.CURRENT_USER);
+        String tokenKey = CookieUtils.readLoginToken(request);
+        RedisUtils.del(tokenKey);
+        CookieUtils.delLoginToken(response,Constant.COOKIE_NAME,request);
         return ServerResponse.createBySuccess();
     }
 
@@ -66,14 +74,14 @@ public class UserController {
 
     @ApiOperation(value = "获取当前登陆用户的详细信息")
     @GetMapping("user/session")
-    public ServerResponse<User> getUserInfo(@ApiIgnore HttpSession session){
+    public ServerResponse<User> getUserInfo(@ApiIgnore HttpServletRequest request){
 
-        Object object = session.getAttribute(Constant.CURRENT_USER);
-        if (object != null){
-            User user = (User) object;
-            return ServerResponse.createBySuccess(user);
-        }
-        return ServerResponse.createByErrorMessage("用户未登陆");
+        ServerResponse response = ControllerUtils.isLogin(request);
+        if (response.isError())
+            return ServerResponse.createByErrorMessage("用户未登陆");
+
+        User user = (User) response.getData();
+        return ServerResponse.createBySuccess(user);
     }
 
     @ApiOperation(value = "用户密保问题")
@@ -101,12 +109,14 @@ public class UserController {
 
     @ApiOperation(value = "登陆状态修改密码")
     @PutMapping("user/password/session")
-    public ServerResponse<String> resetPassword(@ApiIgnore HttpSession session,
+    public ServerResponse<String> resetPassword(@ApiIgnore HttpServletRequest request,
                                                 @Valid  UserRestPasswordSession userRestPasswordSession){
 
-        Object object = session.getAttribute(Constant.CURRENT_USER);
-        if (object == null) return ServerResponse.createByErrorMessage("用户未登陆");
-        User user = (User) object;
+        ServerResponse response = ControllerUtils.isLogin(request);
+        if (response.isError())
+            return ServerResponse.createByErrorMessage("用户未登陆");
+
+        User user = (User) response.getData();
         return userService.resetPassword(userRestPasswordSession.getPasswordOld(),userRestPasswordSession.getPasswordNew(),user);
     }
 

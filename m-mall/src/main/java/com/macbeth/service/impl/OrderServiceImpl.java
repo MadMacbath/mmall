@@ -38,10 +38,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.reflections.Reflections.log;
@@ -368,6 +365,28 @@ public class OrderServiceImpl implements OrderService {
                 return ServerResponse.createBySuccessMessage("发货成功");
         }
         return ServerResponse.createByErrorMessage("发货失败");
+    }
+
+    @Override
+    public void closeOrder(Integer hour) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY,-hour);
+        List<Order> orders = orderMapper.selectByStateAndCreateTime(Constant.OrderStatus.WAIT_FOR_PAY.getCode(), calendar.getTime());
+        orders.stream().forEach(order -> {
+            List<OrderItem> orderItems = orderItemMapper.getByOrderNo(order.getOrderNo());
+            orderItems.stream().forEach(item -> {
+                Integer stock = productMapper.getStockByProductId(item.getProductId());
+                if (stock != null) {
+                    Product product = new Product();
+                    product.setId(item.getProductId());
+                    product.setStock(stock + item.getQuantity());
+                    productMapper.updateByPrimaryKeySelective(product);
+                }
+            });
+            order.setStatus(Constant.OrderStatus.CANCELL.getCode());
+            orderMapper.updateByPrimaryKeySelective(order);
+        });
     }
 
     private OrderVo assembleOrderVo(Order order,List<OrderItem> orderItems){

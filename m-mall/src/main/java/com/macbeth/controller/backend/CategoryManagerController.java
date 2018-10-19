@@ -23,7 +23,7 @@ import java.util.Set;
 
 @RestController
 @Api(tags = "分类管理接口")
-@RequestMapping(value = "category-manager")
+@RequestMapping(value = "managers")
 public class CategoryManagerController {
 
     @Autowired

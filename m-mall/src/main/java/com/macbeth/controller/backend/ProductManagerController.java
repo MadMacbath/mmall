@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +31,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 @Api(tags = "商品管理接口")
-@RestController
-@RequestMapping(value = "product-manager")
+@Controller
+@ResponseBody
+@RequestMapping("managers")
 public class ProductManagerController {
 
     @Autowired

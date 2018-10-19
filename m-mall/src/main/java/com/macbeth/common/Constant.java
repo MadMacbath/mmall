@@ -1,6 +1,7 @@
 package com.macbeth.common;
 
 import com.google.common.collect.Sets;
+import com.macbeth.util.PropertiesUtils;
 import lombok.Data;
 
 import java.util.Arrays;
@@ -12,6 +13,34 @@ public class Constant {
     public static final String USERNAME = "username";
     public static final String TOKEN_PREFIX = "token_";
     public static final String IMAGE_HOST = "ftp.server.http.prefix";
+
+    public static final Long LOCK_TIME = Long.parseLong(PropertiesUtils.getProperty("lock.time","5000"));
+
+    public static final Integer CLOSE_ORDER_SCOPE = Integer.parseInt(PropertiesUtils.getProperty("close.order.scope","2"));
+
+    public static final String COOKIE_DOMAIN = PropertiesUtils.getProperty("cookie_domain","macbeth.com.cn");
+    public static final String COOKIE_NAME = PropertiesUtils.getProperty("cookie.name","macbeth_login_token");
+
+    public static final Integer REDIS_MAX_TOTAL = Integer.parseInt(PropertiesUtils.getProperty("redis.max.total","20"));
+    public static final Integer REDIS_MAX_IDLE = Integer.parseInt(PropertiesUtils.getProperty("redis.max.idle","10"));
+    public static final Integer REDIS_MIN_IDLE = Integer.parseInt(PropertiesUtils.getProperty("redis.min.idle","2"));
+    public static final Boolean REDIS_TEST_ON_BORROW = Boolean.valueOf(PropertiesUtils.getProperty("redis.test.on.borrow","true"));
+    public static final Boolean REDIS_TEST_ON_RETURN = Boolean.valueOf(PropertiesUtils.getProperty("redis.test.on.return","true"));
+
+    public static final String REDIS_1_IP = PropertiesUtils.getProperty("redis.1.ip");
+    public static final Integer REDIS_1_PORT = Integer.parseInt(PropertiesUtils.getProperty("redis.1.port","6379"));
+    public static final String REDIS_1_PASSWORD = PropertiesUtils.getProperty("redis.1.password");
+
+    public static final String REDIS_2_IP = PropertiesUtils.getProperty("redis.2.ip");
+    public static final Integer REDIS_2_PORT = Integer.parseInt(PropertiesUtils.getProperty("redis.2.port","6379"));
+    public static final String REDIS_2_PASSWORD = PropertiesUtils.getProperty("redis.2.password");
+
+
+    public static final Integer REDIS_TIMEOUT = Integer.parseInt(PropertiesUtils.getProperty("redis.timeout","2000"));
+
+    public interface REDIS_LOCK{
+        String CLOSE_ORDER_TASK_LOCK = "CLOSE_ORDER_TASK_LOCK";
+    }
 
     public interface Cart{
         int CHECKED = 1;//购物车选中状态
@@ -25,8 +54,8 @@ public class Constant {
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
     }
     public interface Role{
-        int ROLE_CUSTOMER = 0; //普通用户
-        int ROLE_ADMIN = 1; // 管理员
+        int ROLE_CUSTOMER = 1; //普通用户
+        int ROLE_ADMIN = 0; // 管理员
     }
 
     public enum ProductStatusEnum {

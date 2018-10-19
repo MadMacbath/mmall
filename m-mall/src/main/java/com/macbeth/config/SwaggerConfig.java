@@ -20,8 +20,6 @@ import java.util.Properties;
 
 @Configuration
 @EnableSwagger2
-//@ComponentScan(basePackages = {"com.macbeth"})
-//@EnableWebMvc
 public class SwaggerConfig extends WebMvcConfigurationSupport {
     @Bean
     public Docket customDocket(){

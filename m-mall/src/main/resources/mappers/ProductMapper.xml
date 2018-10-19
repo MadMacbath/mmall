@@ -291,4 +291,8 @@
       </foreach>
     </if>
   </select>
+
+  <select id="getStockByProductId" parameterType="int" resultType="int">
+    select stock from mmall_product where id = #{productId} for update
+  </select>
 </mapper>

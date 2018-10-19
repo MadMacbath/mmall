@@ -313,4 +313,15 @@
       </if>
     </trim>
   </select>
+
+  <select id="selectByStateAndCreateTime" resultType="Order" parameterType="map">
+    select
+    <include refid="orderProperties" />
+    from mmall_order
+    where status = #{status}
+    <![CDATA[
+      and create_time <= #{time}
+    ]]
+    order by create_time desc
+  </select>
 </mapper>

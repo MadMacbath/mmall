@@ -25,7 +25,7 @@
     <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
         <property name="dataSource" ref="dataSource" />
         <property name="mapperLocations" value="classpath:mappers/*Mapper.xml" />
-        <property name="typeAliasesPackage" value="com.macbeth.pojo" />
+        <property name="typeAliasesPackage" value="com.macbeth" />
         <property name="configuration">
             <bean class="org.apache.ibatis.session.Configuration">
                 <property name="mapUnderscoreToCamelCase" value="true" />

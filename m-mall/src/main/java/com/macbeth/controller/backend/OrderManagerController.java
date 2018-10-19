@@ -19,7 +19,7 @@ import java.util.List;
 
 @Api(tags = "订单后台接口")
 @RestController
-@RequestMapping(value = "order-manager")
+@RequestMapping(value = "managers")
 public class OrderManagerController {
 
     @Autowired

@@ -36,4 +36,6 @@ public interface OrderService {
     ServerResponse<PageInfo<List<OrderVo>>> managerSearch(OrderSearch orderSearch);
 
     ServerResponse sendPostage(Long orderNo);
+
+    void closeOrder(Integer hour);
 }

@@ -5,6 +5,7 @@ import com.macbeth.pojo.OrderExample;
 import com.macbeth.to.manager.order.OrderSearch;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderMapper {
@@ -31,4 +32,6 @@ public interface OrderMapper {
     List<Order> lists();
 
     List<Order> managerSearch(OrderSearch orderSearch);
+
+    List<Order> selectByStateAndCreateTime(@Param("status") int status, @Param("time") Date time);
 }
