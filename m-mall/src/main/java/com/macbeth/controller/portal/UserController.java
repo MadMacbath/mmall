@@ -7,6 +7,7 @@ import com.macbeth.service.UserService;
 import com.macbeth.util.*;
 import com.macbeth.to.*;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,9 @@ import javax.validation.Valid;
 
 @RestController
 @Api(tags = "用户接口")
+@Slf4j
 public class UserController {
 
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -59,7 +60,7 @@ public class UserController {
     @ApiOperation(value = "用户注册")
     @PostMapping("user")
     public ServerResponse<String> register(@Valid @RequestBody UserRegister userRegister){
-
+        log.info("用户注册");
         User user = new User();
         ObjectUtils.transferEntity(user,userRegister);
         return userService.register(user);

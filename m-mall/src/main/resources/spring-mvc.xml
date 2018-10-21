@@ -31,12 +31,12 @@
     </mvc:annotation-driven >
     <!--<mvc:default-servlet-handler />-->
 
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/managers/**"/>
-            <bean class="com.macbeth.intercepters.MyInterceptor" />
-        </mvc:interceptor>
-    </mvc:interceptors>
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/managers/**"/>-->
+            <!--<bean class="com.macbeth.intercepters.MyInterceptor" />-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
 
     <bean id="conversionService2" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
 
